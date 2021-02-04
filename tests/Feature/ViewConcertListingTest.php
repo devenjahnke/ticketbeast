@@ -17,8 +17,6 @@ class ViewConcertListingTest extends TestCase
         // Disable Laravel's default exception handling
         $this->withoutExceptionHandling();
 
-        // Arrange
-        // Create a concert
         $concert = Concert::create([
             'title' => 'The Red Chord',
             'subtitle' => 'with Animosity and Lethargy',
@@ -32,12 +30,8 @@ class ViewConcertListingTest extends TestCase
             'additional_information' => 'For tickets, call (555) 555-5555.',
         ]);
 
-        // Act
-        // View the concert listing
         $response = $this->get('/concerts/' . $concert->id);
 
-        // Assert
-        // See the concert details
         $response->assertSee('The Red Chord');
         $response->assertSee('with Animosity and Lethargy');
         $response->assertSee('December 13, 2021');
@@ -47,6 +41,18 @@ class ViewConcertListingTest extends TestCase
         $response->assertSee('123 Example Lane');
         $response->assertSee('Laraville, ON 17916');
         $response->assertSee('For tickets, call (555) 555-5555.');
+    }
+
+    /** @test */
+    function user_cannot_view_unpublished_concert_listings()
+    {
+        $concert = Concert::factory()->create([
+           'published_at' => null,
+        ]);
+
+        $response = $this->get('/concerts/' . $concert->id);
+
+        $response->assertStatus(404);
     }
 
 }
