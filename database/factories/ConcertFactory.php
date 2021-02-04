@@ -35,4 +35,28 @@ class ConcertFactory extends Factory
             'additional_information' => 'Some sample additional information.',
         ];
     }
+
+    /**
+     * Mark the concert as published.
+     *
+     * @return Factory
+     */
+    public function published()
+    {
+        return $this->state([
+            'published_at' => Carbon::parse('-1 week'),
+        ]);
+    }
+
+    /**
+     * Mark the concert as unpublished.
+     *
+     * @return Factory
+     */
+    public function unpublished()
+    {
+        return $this->state([
+            'published_at' => null,
+        ]);
+    }
 }
