@@ -12,7 +12,7 @@ class ViewConcertListingTest extends TestCase
     use DatabaseMigrations; // Run migrations when scaffolding sqlite database in memory
 
     /** @test */
-    function user_can_view_a_concert_listing()
+    function user_can_view_a_published_concert_listing()
     {
         // Disable Laravel's default exception handling
         $this->withoutExceptionHandling();
@@ -28,6 +28,7 @@ class ViewConcertListingTest extends TestCase
             'state' => 'ON',
             'zip' => '17916',
             'additional_information' => 'For tickets, call (555) 555-5555.',
+            'published_at' => Carbon::parse('-1 week'),
         ]);
 
         $response = $this->get('/concerts/' . $concert->id);
