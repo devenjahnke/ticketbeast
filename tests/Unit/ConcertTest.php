@@ -4,29 +4,39 @@ namespace Tests\Unit;
 
 use App\Models\Concert;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
 class ConcertTest extends TestCase
 {
-    use DatabaseMigrations;
-
     /** @test */
     function can_get_formatted_date()
     {
-        // Arrange
-        // Create a concert with a known date
         $concert = Concert::factory()->make([
             'date' => Carbon::parse('2021-12-01 8:00pm'),
         ]);
 
-        // Act
-        // Retrieve the formatted date
-        $date = $concert->formatted_date;
-
-        // Assert
-        // Verify the date is formatted as expected
-        $this->assertEquals('December 1, 2021', $date);
+        $this->assertEquals('December 1, 2021', $concert->formatted_date);
     }
+
+    /** @test */
+    function can_get_formatted_start_time()
+    {
+        $concert = Concert::factory()->make([
+            'date' => Carbon::parse('2021-12-01 17:00:00'),
+        ]);
+
+        $this->assertEquals('5:00pm', $concert->formatted_start_time);
+    }
+
+    /** @test */
+    function can_get_ticket_price_in_dollars()
+    {
+        $concert = Concert::factory()->make([
+            'ticket_price' => 6750,
+        ]);
+
+        $this->assertEquals('67.50', $concert->ticket_price_in_dollars);
+    }
+
 
 }
