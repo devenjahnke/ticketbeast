@@ -31,7 +31,7 @@ class PurchaseTicketsTest extends TestCase
 
     protected function assertValidationError($response, $field)
     {
-        // Assert validation error is handled
+        // Assert the request could not be processed
         $response->assertStatus(422);
         // Assert payment token is the cause of validation error
         $this->assertArrayHasKey($field, $response->decodeResponseJson()['errors']);
@@ -49,8 +49,6 @@ class PurchaseTicketsTest extends TestCase
             'ticket_quantity' => 3,
             'payment_token' => $this->paymentGateway->getValidTestToken(),
         ]);
-
-
 
         // Assert HTTP request was successful
         $response->assertStatus(201);
@@ -83,6 +81,28 @@ class PurchaseTicketsTest extends TestCase
     }
 
     /** @test */
+    function customer_cannot_purchase_more_tickets_than_remain()
+    {
+        $concert = Concert::factory()->published()->create();
+        $concert->addTickets(50);
+
+        $response = $this->orderTickets($concert, [
+            'email' => 'john@example.com',
+            'ticket_quantity' => 51,
+            'payment_token' => $this->paymentGateway->getValidTestToken(),
+        ]);
+
+        // Assert the request could not be processed
+        $response->assertStatus(422);
+        // Assert an order was not created for this customer
+        $this->assertNull($concert->orders()->where('email', 'john@example.com')->first());
+        // Assert the customer was not charged
+        $this->assertEquals(0, $this->paymentGateway->totalCharges());
+        // Assert that 50 tickets still remain for the concert
+        $this->assertEquals(50, $concert->ticketsRemaining());
+    }
+
+    /** @test */
     function an_order_is_not_created_if_payment_fails()
     {
         $concert = Concert::factory()->published()->create([
@@ -95,6 +115,7 @@ class PurchaseTicketsTest extends TestCase
             'payment_token' => 'invalid-payment-token',
         ]);
 
+        // Assert the request could not be processed
         $response->assertStatus(422);
         // Get the order for this customer
         $order = $concert->orders()->where('email', 'john@example.com')->first();
