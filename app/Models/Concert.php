@@ -36,6 +36,11 @@ class Concert extends Model
         return $this->hasMany(Order::class);
     }
 
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
     public function orderTickets($email, $ticketQuantity)
     {
         // Create a new order for this concert
@@ -43,11 +48,27 @@ class Concert extends Model
             'email' => $email,
         ]);
 
-        // Create the tickets associated with this order
-        foreach (range(1, $ticketQuantity) as $i) {
-            $order->tickets()->create([]);
+        // Get tickets associated with the concert
+        $tickets = $this->tickets()->take($ticketQuantity)->get();
+
+        // Associate each of the tickets with this order
+        foreach ($tickets as $ticket) {
+            $order->tickets()->save($ticket);
         }
 
         return $order;
+    }
+
+    public function addTickets($quantity)
+    {
+        // Create the tickets associated with this order
+        foreach (range(1, $quantity) as $i) {
+            $this->tickets()->create([]);
+        }
+    }
+
+    public function ticketsRemaining()
+    {
+        return $this->tickets()->whereNull('order_id')->count();
     }
 }
