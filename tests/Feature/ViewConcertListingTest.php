@@ -14,9 +14,6 @@ class ViewConcertListingTest extends TestCase
     /** @test */
     function user_can_view_a_published_concert_listing()
     {
-        // Disable Laravel's default exception handling
-        $this->withoutExceptionHandling();
-
         $concert = Concert::factory()->published()->create([
             'title' => 'The Red Chord',
             'subtitle' => 'with Animosity and Lethargy',
