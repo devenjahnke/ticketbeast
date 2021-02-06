@@ -16,29 +16,9 @@ class ConcertOrdersController extends Controller
 
     public function store($concertId)
     {
-        // Find this concert
         $concert = Concert::find($concertId);
-
-        // Get ticket quantity from HTTP request
-        $ticketQuantity = request('ticket_quantity');
-
-        // Calculate amount to charge
-        $amount = $ticketQuantity * $concert->ticket_price;
-
-        // Get the payment token from HTTP request
-        $token = request('payment_token');
-
-        // Process charge through payment gateway
-        $this->paymentGateway->charge($amount, $token);
-
-        // Create a new order for this concert
-        $order = $concert->orders()->create([
-            'email' => request('email'),
-        ]);
-
-        foreach (range(1, $ticketQuantity) as $i) {
-            $order->tickets()->create([]);
-        }
+        $this->paymentGateway->charge(request('ticket_quantity') * $concert->ticket_price, request('payment_token'));
+        $order = $concert->orderTickets(request('email'), request('ticket_quantity'));
 
         return response()->json([], 201);
     }
