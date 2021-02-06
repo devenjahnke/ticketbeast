@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Exceptions\NotEnoughTicketsException;
 use App\Models\Concert;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -65,6 +66,7 @@ class ConcertTest extends TestCase
     function can_order_concert_tickets()
     {
         $concert = Concert::factory()->create();
+        $concert->addTickets(3);
 
         $order = $concert->orderTickets('jane@example.com', 3);
 
@@ -90,6 +92,48 @@ class ConcertTest extends TestCase
         $concert->orderTickets('jane@example.com', 30);
 
         $this->assertEquals(20, $concert->ticketsRemaining());
+    }
+
+    /** @test */
+    function trying_to_purchase_more_tickets_than_remain_throws_an_exception()
+    {
+        $concert = Concert::factory()->create();
+        $concert->addTickets(10);
+        try {
+            $concert->orderTickets('jane@example.com', 11);
+        } catch (NotEnoughTicketsException $e) {
+            $order = $concert->orders()->where('email', 'jane@example.com')->first();
+            // Assert an order was not placed
+            $this->assertNull($order);
+            // Verify tickets are still available
+            $this->assertEquals(10, $concert->ticketsRemaining());
+            return;
+        }
+
+        // Fail the test if an exception is not thrown
+        $this->fail('Order succeeded even though there were not enough tickets remaining.');
+    }
+
+    /** @test */
+    function cannot_order_tickets_that_have_already_been_purchased()
+    {
+        $concert = Concert::factory()->create();
+        $concert->addTickets(10);
+        $concert->orderTickets('jane@example.com', 8);
+
+        try {
+            $concert->orderTickets('john@example.com', 3);
+        } catch (NotEnoughTicketsException $e) {
+            $johnsOrder = $concert->orders()->where('email', 'john@example.com')->first();
+            // Assert an order was not placed for John
+            $this->assertNull($johnsOrder);
+            // Verify tickets are still available
+            $this->assertEquals(2, $concert->ticketsRemaining());
+            return;
+        }
+
+        // Fail the test if an exception is not thrown
+        $this->fail('Order succeeded even though there were not enough tickets remaining.');
     }
 
 
