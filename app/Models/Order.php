@@ -15,6 +15,11 @@ class Order extends Model
         return $this->hasMany(Ticket::class);
     }
 
+    public function ticketQuantity()
+    {
+        return $this->tickets()->count();
+    }
+
     public function cancel()
     {
         foreach ($this->tickets as $ticket) {
