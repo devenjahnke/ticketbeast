@@ -64,6 +64,7 @@ class Concert extends Model
         // Create a new order for this concert
         $order = $this->orders()->create([
             'email' => $email,
+            'amount' => $ticketQuantity * $this->ticket_price,
         ]);
 
         // Associate each of the tickets with this order
