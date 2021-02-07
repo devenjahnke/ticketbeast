@@ -10,6 +10,20 @@ class Order extends Model
     use HasFactory;
     protected $guarded = [];
 
+    public static function forTickets($tickets, $email)
+    {
+        $order = self::create([
+            'email' => $email,
+            'amount' => $tickets->sum('price'),
+        ]);
+
+        foreach ($tickets as $ticket) {
+            $order->tickets()->save($ticket);
+        }
+
+        return $order;
+    }
+
     public function concert()
     {
         return $this->belongsTo(Concert::class);
