@@ -125,6 +125,16 @@ class ConcertTest extends TestCase
         $this->fail('Order succeeded even though there were not enough tickets remaining.');
     }
 
+    /** @test */
+    function can_reserve_available_tickets()
+    {
+        $concert = Concert::factory()->create()->addTickets(3);
+        $this->assertEquals(3, $concert->ticketsRemaining());
 
+        $reservedTickets = $concert->reserveTickets(2);
+
+        $this->assertEquals(2, $reservedTickets);
+        $this->assertEquals(1, $concert->ticketsRemaining());
+    }
 
 }
