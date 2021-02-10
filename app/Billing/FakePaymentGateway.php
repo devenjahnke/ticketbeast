@@ -7,7 +7,7 @@ use phpDocumentor\Reflection\Types\Callable_;
 class FakePaymentGateway implements PaymentGateway
 {
     private \Illuminate\Support\Collection $charges;
-    private mixed $beforeFirstChargeCallback;
+    private $beforeFirstChargeCallback;
 
     public function __construct()
     {
