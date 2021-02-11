@@ -2,14 +2,18 @@
 
 namespace Tests\Unit;
 
+use App\Billing\FakePaymentGateway;
 use App\Models\Concert;
 use App\Models\Reservation;
 use App\Models\Ticket;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Mockery;
 use Tests\TestCase;
 
 class ReservationTest extends TestCase
 {
+    use DatabaseMigrations;
+
     /** @test */
     function calculating_the_total_cost()
     {
@@ -63,6 +67,25 @@ class ReservationTest extends TestCase
         }
     }
 
+    /** @test */
+    function completing_a_reservation()
+    {
+        $concert = Concert::factory()->create([
+            'ticket_price' => 1200,
+        ]);
+        $tickets = Ticket::factory()->count(3)->create([
+            'concert_id' => $concert->id,
+        ]);
+        $reservation = new Reservation($tickets, 'john@example.com');
+        $paymentGateway = new FakePaymentGateway;
+
+        $order = $reservation->complete($paymentGateway, $paymentGateway->getValidTestToken());
+
+        $this->assertEquals('john@example.com', $order->email);
+        $this->assertEquals(3, $order->ticketQuantity());
+        $this->assertEquals(3600, $order->amount);
+        $this->assertEquals(3600, $paymentGateway->totalCharges());
+    }
 
 
 }
