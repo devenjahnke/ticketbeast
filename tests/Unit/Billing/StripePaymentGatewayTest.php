@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Billing;
 
+use App\Billing\StripePaymentGateway;
 use Stripe\Charge;
 use Stripe\Exception\ApiErrorException;
 use Stripe\Token;
@@ -14,7 +15,7 @@ class StripePaymentGatewayTest extends TestCase
      */
     function charges_with_a_valid_payment_token_are_successful()
     {
-        $paymentGateway = new StripePaymentGateway;
+        $paymentGateway = new StripePaymentGateway(config('services.stripe.secret'));
         $token = Token::create([
             'card' => [
                 'number' => '4242424242424242',
