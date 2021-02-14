@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Billing;
 
+use Stripe\Charge;
 use Stripe\Exception\ApiErrorException;
 use Stripe\Token;
 use Tests\TestCase;
@@ -25,7 +26,12 @@ class StripePaymentGatewayTest extends TestCase
 
         $paymentGateway->charge(2500, $token);
 
-        
+        $lastCharge = Charge::all(
+            ['limit' => 1],
+            ['api_key' => config('services.stripe.secret')],
+        )['data'][0];
+
+        $this->assertEquals(2500, $lastCharge->amount);
     }
 
 }
