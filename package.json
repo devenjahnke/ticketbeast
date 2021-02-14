@@ -12,7 +12,17 @@
     "devDependencies": {
         "axios": "^0.21",
         "laravel-mix": "^6.0.6",
+        "less": "^4.1.1",
+        "less-loader": "^8.0.0",
         "lodash": "^4.17.19",
-        "postcss": "^8.1.14"
+        "postcss": "^8.1.14",
+        "vue": "^2.6.12",
+        "vue-loader": "^15.9.6",
+        "vue-template-compiler": "^2.6.12"
+    },
+    "dependencies": {
+        "es6-promise": "^4.2.8",
+        "normalize.css": "^8.0.1",
+        "suitcss-base": "^5.0.0"
     }
 }
