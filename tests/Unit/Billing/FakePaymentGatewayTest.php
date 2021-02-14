@@ -8,16 +8,18 @@ use PHPUnit\Framework\TestCase;
 
 class FakePaymentGatewayTest extends TestCase
 {
+    protected function getPaymentGateway(): FakePaymentGateway
+    {
+        return new FakePaymentGateway;
+    }
+
     /** @test */
     function charges_with_a_valid_payment_token_are_successful()
     {
-        // Create payment gateway
-        $paymentGateway = new FakePaymentGateway;
+        $paymentGateway = $this->getPaymentGateway();
 
-        // Execute charge using payment gateway
         $paymentGateway->charge(2500, $paymentGateway->getValidTestToken());
 
-        // Assert charge was successfully executed
         $this->assertEquals(2500, $paymentGateway->totalCharges());
     }
 
