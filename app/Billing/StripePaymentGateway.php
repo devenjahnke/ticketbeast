@@ -48,7 +48,7 @@ class StripePaymentGateway implements PaymentGateway
         return $this->newChargesSince($latestCharge)->pluck('amount');
     }
 
-    private function lastCharge(): array | null
+    private function lastCharge(): \Stripe\Charge | null
     {
         $charge = Charge::all(
             ['limit' => 1],
