@@ -7,6 +7,9 @@ use Stripe\Charge;
 use Stripe\Token;
 use Tests\TestCase;
 
+/**
+ * @group integration
+ */
 class StripePaymentGatewayTest extends TestCase
 {
     private $lastCharge;
@@ -17,7 +20,7 @@ class StripePaymentGatewayTest extends TestCase
             ['limit' => 1],
             ['api_key' => config('services.stripe.secret')],
         )['data'];
-        
+
         return empty($charge[0]) ? null : $charge[0];
     }
 
