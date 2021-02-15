@@ -7,7 +7,7 @@
                 <div class="m-xs-b-6">
                     <div class="flex-baseline flex-spaced p-xs-y-4 border-b">
                         <h1 class="text-xl">Order Summary</h1>
-                        <a href="#" class="link-brand-soft">{{ $order->confirmation_number }}</a>
+                        <a href="{{ url("/orders/{$order->confirmation_number}") }}" class="link-brand-soft">{{ $order->confirmation_number }}</a>
                     </div>
                     <div class="p-xs-y-4 border-b">
                         <p>
@@ -36,7 +36,7 @@
                                     <div class="col-sm">
                                         <div class="media-object">
                                             <div class="media-left">
-                                                @icon('calendar', 'text-brand-muted')
+                                                <x-zondicon-calendar width="20" height="20"/>
                                             </div>
                                             <div class="media-body p-xs-l-4">
                                                 <p class="wt-bold">Sunday, October 16, 2011</p>
@@ -47,7 +47,7 @@
                                     <div class="col-sm">
                                         <div class="media-object">
                                             <div class="media-left">
-                                                @icon('location', 'text-brand-muted')
+                                                <x-zondicon-location width="20" height="20"/>
                                             </div>
                                             <div class="media-body p-xs-l-4">
                                                 <p class="wt-bold">Music Hall of Williamsburg</p>
