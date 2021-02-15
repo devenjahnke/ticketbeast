@@ -56,10 +56,12 @@ class OrderTest extends TestCase
     /** @test */
     function converting_to_an_array()
     {
-        $concert = Concert::factory()->create([
-            'ticket_price' => 1200,
-        ])->addTickets(5);
-        $order = $concert->orderTickets('jane@example.com', 5);
+        $order = Order::factory()->create([
+            'email' => 'jane@example.com',
+            'amount' => 6000,
+            'confirmation_number' => 'ORDERCONFIRMATION1234',
+        ]);
+        $order->tickets()->saveMany(Ticket::factory()->count(5)->create());
 
         $result = $order->toArray();
 
@@ -67,6 +69,7 @@ class OrderTest extends TestCase
             'email' => 'jane@example.com',
             'ticket_quantity' => 5,
             'amount' => 6000,
+            'confirmation_number' => 'ORDERCONFIRMATION1234',
         ], $result);
     }
 }
