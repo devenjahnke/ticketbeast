@@ -7,8 +7,9 @@ use phpDocumentor\Reflection\Types\Callable_;
 
 class FakePaymentGateway implements PaymentGateway
 {
+    const TEST_CARD_NUMBER = '4242424242424242';
     private \Illuminate\Support\Collection $charges;
-    private $tokens;
+    private \Illuminate\Support\Collection $tokens;
     private $beforeFirstChargeCallback;
 
     public function __construct()
@@ -17,7 +18,7 @@ class FakePaymentGateway implements PaymentGateway
         $this->tokens = collect();
     }
 
-    public function charge($amount, $token)
+    public function charge($amount, $token): Charge
     {
         if ($this->beforeFirstChargeCallback !== null) {
             $callback = $this->beforeFirstChargeCallback;
@@ -35,7 +36,7 @@ class FakePaymentGateway implements PaymentGateway
         ]);
     }
 
-    public function getValidTestToken($cardNumber = '4242424242424242'): string
+    public function getValidTestToken($cardNumber = self::TEST_CARD_NUMBER): string
     {
         $token = 'fake-tok_' . Str::random(24);
         $this->tokens[$token] = $cardNumber;
