@@ -15,6 +15,7 @@ class Order extends Model
         $order = self::create([
             'email' => $email,
             'amount' => $amount,
+            'confirmation_number' => app(OrderConfirmationNumberGenerator::class)->generate(),
         ]);
 
         foreach ($tickets as $ticket) {
