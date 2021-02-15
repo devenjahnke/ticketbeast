@@ -11,11 +11,12 @@ class Order extends Model
     use HasFactory;
     protected $guarded = [];
 
-    public static function forTickets($tickets, $email, $amount)
+    public static function forTickets($tickets, $email, $charge)
     {
         $order = self::create([
             'email' => $email,
-            'amount' => $amount,
+            'amount' => $charge->amount(),
+            'card_last_four' => $charge->cardLastFour(),
             'confirmation_number' => OrderConfirmationNumber::generate(),
         ]);
 
