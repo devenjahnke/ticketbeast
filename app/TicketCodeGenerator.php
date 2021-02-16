@@ -4,5 +4,5 @@ namespace App;
 
 interface TicketCodeGenerator
 {
-    public function generate(): String;
+    public function generateFor($ticket): String;
 }
