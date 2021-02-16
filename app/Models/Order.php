@@ -20,10 +20,8 @@ class Order extends Model
             'confirmation_number' => OrderConfirmationNumber::generate(),
         ]);
 
-        foreach ($tickets as $ticket) {
-            $order->tickets()->save($ticket);
-        }
-
+        $tickets->each->claimFor($order);
+        
         return $order;
     }
 
