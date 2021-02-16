@@ -21,10 +21,5 @@ class DatabaseSeeder extends Seeder
         Ticket::factory()->count(10)->create([
             'concert_id' => $concert->id,
         ]);
-        Ticket::factory()->reserved()->count(3)->create([
-            'concert_id' => $concert->id,
-            'order_id' => $order->id,
-        ]);
-
     }
 }
