@@ -21,7 +21,7 @@ class Order extends Model
         ]);
 
         $tickets->each->claimFor($order);
-        
+
         return $order;
     }
 
