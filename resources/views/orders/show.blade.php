@@ -21,7 +21,7 @@
 
                     @foreach($order->tickets as $ticket)
                         <div class="card m-xs-b-5">
-                            <div class="card-section p-xs-y-3 flex-baseline flex-spaced text-light bg-gray">
+                            <div class="card-section p-xs-y-3 flex-baseline flex-spaced text-light bg-dark">
                                 <div>
                                     <h1 class="text-xl wt-normal">{{ $ticket->concert->title }}</h1>
                                     <p class="text-light-muted">{{ $ticket->concert->subtitle }}</p>

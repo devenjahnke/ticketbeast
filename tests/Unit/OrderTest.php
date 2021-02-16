@@ -65,15 +65,23 @@ class OrderTest extends TestCase
             'amount' => 6000,
             'confirmation_number' => 'ORDERCONFIRMATION1234',
         ]);
-        $order->tickets()->saveMany(Ticket::factory()->count(5)->create());
+        $order->tickets()->saveMany([
+            Ticket::factory()->create(['code' => 'TICKETCODE1']),
+            Ticket::factory()->create(['code' => 'TICKETCODE2']),
+            Ticket::factory()->create(['code' => 'TICKETCODE3']),
+        ]);
 
         $result = $order->toArray();
 
         $this->assertEquals([
             'email' => 'jane@example.com',
-            'ticket_quantity' => 5,
             'amount' => 6000,
             'confirmation_number' => 'ORDERCONFIRMATION1234',
+            'tickets' => [
+                ['code' => 'TICKETCODE1'],
+                ['code' => 'TICKETCODE2'],
+                ['code' => 'TICKETCODE3'],
+            ],
         ], $result);
     }
 }
