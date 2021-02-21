@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Backstage\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -26,7 +26,7 @@ class PromoterLoginTest extends TestCase
             'password' => 'super-secret-password',
         ]);
 
-        $response->assertRedirect('/backstage/concerts');
+        $response->assertRedirect('/backstage/concerts/new');
         $this->assertTrue(Auth::check());
         $this->assertTrue(Auth::user()->is($user));
     }
@@ -48,6 +48,8 @@ class PromoterLoginTest extends TestCase
 
         $response->assertRedirect('/login');
         $response->assertSessionHasErrors('email');
+        $this->assertTrue(session()->hasOldInput('email'));
+        $this->assertTrue(session()->hasOldInput('password'));
         $this->assertFalse(Auth::check());
     }
 
@@ -63,6 +65,19 @@ class PromoterLoginTest extends TestCase
 
         $response->assertRedirect('/login');
         $response->assertSessionHasErrors('email');
+        $this->assertTrue(session()->hasOldInput('email'));
+        $this->assertTrue(session()->hasOldInput('password'));
+        $this->assertFalse(Auth::check());
+    }
+
+    /** @test */
+    function logging_out_the_current_user()
+    {
+        Auth::login(User::factory()->create());
+
+        $response = $this->post('/logout');
+
+        $response->assertRedirect('/login');
         $this->assertFalse(Auth::check());
     }
 }
