@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ConcertOrdersController;
 use App\Http\Controllers\ConcertsController;
+use App\Http\Controllers\Backstage\ConcertsController as Backstage_ConcertsController;
 use App\Http\Controllers\OrdersController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/concerts/{id}', [ConcertsController::class, 'show']);
+Route::get('/concerts/{id}', [ConcertsController::class, 'show'])->name('concerts.show');
 
 Route::post('/concerts/{id}/orders', [ConcertOrdersController::class, 'store']);
 
@@ -27,6 +28,7 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('auth.show
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::group(['middleware' => 'auth'], function () {
-    Route::get('/backstage/concerts/new', [App\Http\Controllers\Backstage\ConcertsController::class, 'create']);
+Route::group(['middleware' => 'auth', 'prefix' => 'backstage'], function () {
+    Route::get('/concerts/new', [Backstage_ConcertsController::class, 'create']);
+    Route::post('/concerts', [Backstage_ConcertsController::class, 'store']);
 });
