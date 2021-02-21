@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Concert;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ConcertsController extends Controller
 {
@@ -29,7 +30,7 @@ class ConcertsController extends Controller
             'ticket_quantity' => ['required', 'integer', 'min:1'],
         ]);
 
-        $concert = Concert::create([
+        $concert = Auth::user()->concerts()->create([
             'title' => request('title'),
             'subtitle' => request('subtitle'),
             'date' => Carbon::parse(vsprintf('%s %s', [

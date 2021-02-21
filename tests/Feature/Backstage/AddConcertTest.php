@@ -78,9 +78,11 @@ class AddConcertTest extends TestCase
                 'ticket_quantity' => '75',
             ]);
 
-        tap(Concert::first(), function ($concert) use ($response) {
+        tap(Concert::first(), function ($concert) use ($response, $user) {
             $response->assertStatus(302);
             $response->assertRedirect("/concerts/{$concert->id}");
+
+            $this->assertTrue($concert->user->is($user));
 
             $this->assertEquals('No Warning', $concert->title);
             $this->assertEquals('with Cruel Hand and Backtrack', $concert->subtitle);
@@ -135,9 +137,11 @@ class AddConcertTest extends TestCase
                 'subtitle' => '',
             ]));
 
-        tap(Concert::first(), function ($concert) use ($response) {
+        tap(Concert::first(), function ($concert) use ($response, $user) {
             $response->assertStatus(302);
             $response->assertRedirect("/concerts/{$concert->id}");
+
+            $this->assertTrue($concert->user->is($user));
 
             $this->assertNull($concert->subtitle);
         });
@@ -155,9 +159,11 @@ class AddConcertTest extends TestCase
                 'additional_information' => '',
             ]));
 
-        tap(Concert::first(), function ($concert) use ($response) {
+        tap(Concert::first(), function ($concert) use ($response, $user) {
             $response->assertStatus(302);
             $response->assertRedirect("/concerts/{$concert->id}");
+
+            $this->assertTrue($concert->user->is($user));
 
             $this->assertNull($concert->additional_information);
         });
